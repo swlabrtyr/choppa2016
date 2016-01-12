@@ -1,7 +1,6 @@
 s.boot;
 s.stop;
 
-
 NetAddr.localAddr;
 
 // Generic synth
@@ -26,7 +25,7 @@ SynthDef.new(\multi, {
 		Env.new([0,1,0],[0.5,0.2],[1,-1]),
 		doneAction:2
 	);
-	amp = SinOsc.kr({ExpRand(0.2,12)}!8).range(0, 1);
+	amp = SinOsc.kr({ExpRand(0.2,0.5)}!8).range(0, 1);
 
 	sig = SinOsc.ar(pitch);
 	sig = sig * amp * env;
@@ -49,10 +48,12 @@ x.free;
 (
 OSCdef(\starlistener, {
 	arg msg;
-	Synth(\multi, [pitch:msg[1]*400+60, amp:msg[1]*0.002]);
-	Synth(\funsynth, [pitch:msg[1]*400+60]);
+	Synth.new(\multi, [pitch:msg[1]*400+60, amp:msg[1]*0.002]);
+	Synth.new(\funsynth, [pitch:msg[1]*400+60]);
+	// use "/starhit" for discrete osc messages patch
 }, "/mousex");
 )
+
 
 // OSC creating pbind pattern to sequence synthdef
 (
@@ -69,7 +70,6 @@ p.stop;
 
 s.meter;
 
-
 // Potential Delay
 (
 {
@@ -82,3 +82,6 @@ d =  DelayL.ar(signal, 0.6, delaytime);
 [d, signal]
 }.play
 )
+
+SoundIn.ar.postln;
+
